@@ -1,0 +1,51 @@
+# Maven build output
+**/target/
+
+# Logs
+*.log
+*.log.*
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+bin/
+out/
+
+# IntelliJ / Eclipse working files
+.factorypath
+.gradle/
+
+# Spring Boot / local config overrides
+application-local.yml
+application-*.local.yml
+
+# Generated metadata
+*.class
+*.tmp
+*.swp
+*.swo
+
+# Node / frontend (if any future modules使用前端)
+node_modules/
+dist/
+build/
+
+# Coverage / reports
+coverage/
+*.jacoco.exec
+*.ec
+*.coverage
+surefire-reports/
+
+# Docker / container
+.env
+

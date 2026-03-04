@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 引入 Spring Boot 默认配置 -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    
+    <!-- 定义变量 -->
+    <property name="LOG_HOME" value="${LOG_HOME:-logs}"/>
+    <property name="APP_NAME" value="${spring.application.name:-application}"/>
+    <property name="LOG_PATTERN_CONSOLE" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"/>
+    <property name="LOG_PATTERN_FILE" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{traceId:-}] [%X{userId:-}] [%X{ip:-}] %logger{50} - %msg%n"/>
+    <property name="LOG_PATTERN_JSON" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%X{traceId:-}] [%X{userId:-}] [%X{ip:-}] %logger{50} %msg%n"/>
+    
+    <!-- 控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN_CONSOLE}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    
+    <!-- 应用日志文件 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APP_NAME}.log</file>
+        <encoder>
+            <pattern>${LOG_PATTERN_FILE}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/archive/${APP_NAME}-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    
+    <!-- 错误日志文件 -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APP_NAME}-error.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>${LOG_PATTERN_FILE}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/archive/${APP_NAME}-error-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    
+    <!-- 业务日志文件 -->
+    <appender name="BUSINESS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APP_NAME}-business.log</file>
+        <encoder>
+            <pattern>${LOG_PATTERN_FILE}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/archive/${APP_NAME}-business-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>90</maxHistory>
+            <totalSizeCap>30GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    
+    <!-- 性能日志文件 -->
+    <appender name="PERFORMANCE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APP_NAME}-performance.log</file>
+        <encoder>
+            <pattern>${LOG_PATTERN_FILE}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/archive/${APP_NAME}-performance-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    
+    <!-- 审计日志文件 -->
+    <appender name="AUDIT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APP_NAME}-audit.log</file>
+        <encoder>
+            <pattern>${LOG_PATTERN_FILE}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/archive/${APP_NAME}-audit-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>365</maxHistory>
+            <totalSizeCap>100GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    
+    <!-- 业务日志 Logger -->
+    <logger name="BUSINESS" level="INFO" additivity="false">
+        <appender-ref ref="BUSINESS_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    
+    <!-- 性能日志 Logger -->
+    <logger name="PERFORMANCE" level="INFO" additivity="false">
+        <appender-ref ref="PERFORMANCE_FILE"/>
+    </logger>
+    
+    <!-- 审计日志 Logger -->
+    <logger name="AUDIT" level="INFO" additivity="false">
+        <appender-ref ref="AUDIT_FILE"/>
+    </logger>
+    
+    <!-- 第三方框架日志级别 -->
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.apache.dubbo" level="INFO"/>
+    <logger name="com.alibaba.nacos" level="INFO"/>
+    <logger name="io.seata" level="INFO"/>
+    <logger name="org.apache.rocketmq" level="INFO"/>
+    <logger name="com.alibaba.druid" level="WARN"/>
+    <logger name="com.baomidou.mybatisplus" level="WARN"/>
+    
+    <!-- SQL 日志（仅开发环境） -->
+    <springProfile name="dev,test">
+        <logger name="com.vibe" level="DEBUG"/>
+    </springProfile>
+    
+    <!-- 生产环境日志级别 -->
+    <springProfile name="prod">
+        <logger name="com.vibe" level="INFO"/>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+    </springProfile>
+    
+    <!-- 开发/测试环境日志级别 -->
+    <springProfile name="dev,test">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+    </springProfile>
+</configuration>

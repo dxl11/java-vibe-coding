@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: product-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: ${spring.profiles.active:dev}
+        group: DEFAULT_GROUP
+      config:
+        server-addr: localhost:8848
+        file-extension: yml
+        namespace: ${spring.profiles.active:dev}
+        group: DEFAULT_GROUP

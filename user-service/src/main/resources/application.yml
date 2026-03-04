@@ -1,0 +1,47 @@
+server:
+  port: 8081
+
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/vibe_ecommerce?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: is_deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# 日志配置
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    root: INFO
+    com.vibe: DEBUG
+
+# 性能监控配置
+vibe:
+  monitor:
+    performance:
+      enabled: true
+      default-threshold: 2000
+      record-all: false

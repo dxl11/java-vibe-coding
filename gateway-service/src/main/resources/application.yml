@@ -1,0 +1,68 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/user/**
+          filters:
+            - StripPrefix=2
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - StripPrefix=2
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/order/**
+          filters:
+            - StripPrefix=2
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/payment/**
+          filters:
+            - StripPrefix=2
+        - id: inventory-service
+          uri: lb://inventory-service
+          predicates:
+            - Path=/api/inventory/**
+          filters:
+            - StripPrefix=2
+        - id: coupon-service
+          uri: lb://coupon-service
+          predicates:
+            - Path=/api/coupon/**
+          filters:
+            - StripPrefix=2
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "*"
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true
+
+# Sentinel 配置
+spring.cloud.sentinel:
+  transport:
+    dashboard: localhost:8080
+  datasource:
+    flow:
+      nacos:
+        server-addr: localhost:8848
+        data-id: sentinel-flow-rules
+        group-id: DEFAULT_GROUP
+        rule-type: flow

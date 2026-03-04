@@ -1,0 +1,89 @@
+server:
+  port: 8085
+
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/vibe_ecommerce?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: is_deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# Seata 配置
+seata:
+  enabled: true
+  application-id: inventory-service
+  tx-service-group: default_tx_group
+  config:
+    type: nacos
+    nacos:
+      server-addr: localhost:8848
+      namespace: ${spring.profiles.active:dev}
+      group: SEATA_GROUP
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: localhost:8848
+      namespace: ${spring.profiles.active:dev}
+      group: SEATA_GROUP
+
+# RocketMQ 配置
+rocketmq:
+  name-server: localhost:9876
+  consumer:
+    group: inventory-consumer-group
+
+# Dubbo 配置
+dubbo:
+  application:
+    name: inventory-service
+  registry:
+    address: nacos://localhost:8848
+    namespace: ${spring.profiles.active:dev}
+  protocol:
+    name: dubbo
+    port: 20885
+
+# 性能监控配置
+vibe:
+  monitor:
+    performance:
+      enabled: true
+      default-threshold: 2000
+      record-all: false
+  
+  # SAGA 配置
+  saga:
+    default-timeout-seconds: 300
+    retry:
+      max-retry-count: 3
+      initial-interval-ms: 1000
+      max-interval-ms: 60000
+      multiplier: 2.0
+    circuit-breaker:
+      enabled: true
+      failure-rate-threshold: 50.0
+      minimum-number-of-calls: 10
+      time-window-seconds: 60
+    metrics:
+      enabled: true
+    alert:
+      enabled: true
+    recovery:
+      auto-recovery-enabled: true

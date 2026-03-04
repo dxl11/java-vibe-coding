@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vibe.common.mq.mapper.LocalMessageMapper">
+    
+    <!-- 查询待发送的消息 -->
+    <select id="selectPendingMessages" resultType="com.vibe.common.mq.entity.LocalMessage">
+        SELECT * FROM local_message
+        WHERE status = 0
+          AND is_deleted = 0
+        ORDER BY create_time ASC
+        LIMIT #{limit}
+    </select>
+    
+    <!-- 查询需要重试的消息 -->
+    <select id="selectRetryMessages" resultType="com.vibe.common.mq.entity.LocalMessage">
+        SELECT * FROM local_message
+        WHERE status = 2
+          AND retry_count &lt; max_retry_count
+          AND (next_retry_time IS NULL OR next_retry_time &lt;= #{currentTime})
+          AND is_deleted = 0
+        ORDER BY next_retry_time ASC, create_time ASC
+        LIMIT #{limit}
+    </select>
+    
+</mapper>

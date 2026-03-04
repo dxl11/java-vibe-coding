@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vibe.inventory.mapper.InventoryMapper">
+    
+    <!-- 扣减库存 -->
+    <update id="deductStock">
+        UPDATE inventory
+        SET stock = stock - #{quantity},
+            locked_stock = locked_stock + #{quantity},
+            update_time = NOW()
+        WHERE product_id = #{productId}
+          AND stock >= #{quantity}
+          AND is_deleted = 0
+    </update>
+    
+    <!-- 回滚库存 -->
+    <update id="rollbackStock">
+        UPDATE inventory
+        SET stock = stock + #{quantity},
+            locked_stock = locked_stock - #{quantity},
+            update_time = NOW()
+        WHERE product_id = #{productId}
+          AND locked_stock >= #{quantity}
+          AND is_deleted = 0
+    </update>
+    
+</mapper>
