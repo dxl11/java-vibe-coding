@@ -41,6 +41,9 @@ public class LoggingInterceptor implements HandlerInterceptor {
         }
         TraceIdUtils.setTraceId(traceId);
         
+        // 在响应头中添加 TraceId，便于前端追踪
+        response.setHeader("X-Trace-Id", traceId);
+        
         // 设置用户ID到 MDC
         String userId = request.getHeader("X-User-Id");
         if (userId != null && !userId.isEmpty()) {

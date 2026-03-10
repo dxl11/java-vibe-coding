@@ -1,0 +1,108 @@
+{
+  "index_patterns": ["vibe-logs-*"],
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "index.refresh_interval": "5s",
+    "index.lifecycle.name": "vibe-logs-policy",
+    "index.lifecycle.rollover_alias": "vibe-logs"
+  },
+  "mappings": {
+    "properties": {
+      "@timestamp": {
+        "type": "date"
+      },
+      "timestamp": {
+        "type": "date"
+      },
+      "level": {
+        "type": "keyword"
+      },
+      "logger": {
+        "type": "keyword"
+      },
+      "message": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "service": {
+        "type": "keyword"
+      },
+      "logType": {
+        "type": "keyword"
+      },
+      "traceId": {
+        "type": "keyword"
+      },
+      "userId": {
+        "type": "keyword"
+      },
+      "ip": {
+        "type": "ip"
+      },
+      "thread": {
+        "type": "keyword"
+      },
+      "operation": {
+        "type": "keyword"
+      },
+      "resource": {
+        "type": "keyword"
+      },
+      "resource_id": {
+        "type": "keyword"
+      },
+      "action": {
+        "type": "keyword"
+      },
+      "result": {
+        "type": "keyword"
+      },
+      "client_ip": {
+        "type": "ip"
+      },
+      "log_message": {
+        "type": "text"
+      },
+      "params": {
+        "type": "text"
+      },
+      "remark": {
+        "type": "text"
+      },
+      "exception": {
+        "type": "object",
+        "properties": {
+          "exception_class": {
+            "type": "keyword"
+          },
+          "exception_message": {
+            "type": "text"
+          },
+          "stacktrace": {
+            "type": "text"
+          }
+        }
+      },
+      "host": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "keyword"
+          },
+          "ip": {
+            "type": "ip"
+          }
+        }
+      },
+      "environment": {
+        "type": "keyword"
+      }
+    }
+  }
+}

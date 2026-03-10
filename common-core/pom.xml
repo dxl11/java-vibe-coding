@@ -75,6 +75,12 @@
             <artifactId>micrometer-core</artifactId>
         </dependency>
         
+        <!-- Logstash Logback Encoder（用于 JSON 日志格式，支持 ELK） -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+        </dependency>
+        
         <!-- Redis，用于幂等和分布式锁 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
